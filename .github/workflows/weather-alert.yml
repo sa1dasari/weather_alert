@@ -1,6 +1,6 @@
 name: NYC weather alert
 
-on:
+"on":
   schedule:
     # 11:00 UTC = 7:00 AM EDT (roughly Mar-Nov)
     - cron: "0 11 * * *"

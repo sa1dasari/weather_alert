@@ -177,13 +177,12 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    # GitHub Actions cron runs in UTC, and NYC's UTC offset shifts with
-    # daylight saving. Two cron triggers are scheduled (covering both EDT
-    # and EST) and this guard makes sure only the one that actually lands
-    # at 7am ET sends an email; the other run exits quietly.
+    event_name = os.environ.get("GITHUB_EVENT_NAME", "manual")
     now_et = datetime.now(ZoneInfo("America/New_York"))
-    print(f"Running weather alert at {now_et.isoformat()}")
-    if now_et.hour != 7:
-        print(f"Current ET hour is {now_et.hour}, not 7. Skipping (this is the DST-offset duplicate run).")
+    print(f"Running weather alert at {now_et.isoformat()} (trigger: {event_name})")
+
+    if event_name == "schedule" and now_et.hour != 7:
+        print(f"Current ET hour is {now_et.hour}, not 7. Skipping.")
         sys.exit(0)
+
     sys.exit(main())
